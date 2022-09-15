@@ -8,7 +8,7 @@
 #                                                                     #
 # =================================================================== #
 
-name: Redmi-AX6
+name: Glinet-Brume
 
 on:
   workflow_dispatch:
@@ -16,16 +16,16 @@ on:
     types: started
   push:
     paths:
-      - '.github/workflows/Redmi-AX6.yml'
-      - 'devices/Redmi-AX6/.config'
+      - '.github/workflows/Glinet-Brume.yml'
+      - 'devices/Glinet-Brume/.config'
 
 env:
   REPO_URL: https://github.com/solomonricky/openwrt
-  REPO_BRANCH: IPQ807x-5.15
+  REPO_BRANCH: iptables-22.03
   FEEDS_CONF: feeds.conf.default
-  CONFIG_FILE: devices/Redmi-AX6/.config
-  DIY_P1_SH: devices/Redmi-AX6/diy-part1.sh
-  DIY_P2_SH: devices/Redmi-AX6/diy-part2.sh
+  CONFIG_FILE: devices/Glinet-Brume/.config
+  DIY_P1_SH: devices/Glinet-Brume/diy-part1.sh
+  DIY_P2_SH: devices/Glinet-Brume/diy-part2.sh
   UPLOAD_BIN_DIR: false
   UPLOAD_FIRMWARE: true
   UPLOAD_RELEASE: false
@@ -128,7 +128,7 @@ jobs:
         zip -r ${{ env.DEVICE_SAVE_NAME }}.zip ./*
         ls -Ahl
         mkdir zip && mv ${{ env.DEVICE_SAVE_NAME }}.zip zip
-        cp -r *-sysupgrade.bin ./zip/
+        cp -r *squashfs-sysupgrade.bin ./zip/
         cd zip && ls -Ahl
         echo "FIRMWARE=$PWD" >> $GITHUB_ENV
         echo "::set-output name=status::success"
@@ -162,4 +162,3 @@ jobs:
     - name: Telegram push notification
       if: steps.organize.outputs.status == 'success' && !cancelled()
       run: curl "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" -d "chat_id=${{ secrets.TELEGRAM_CHAT_ID }}&text=Congratulations! Firmware ${{ env.DEVICE_SAVE_NAME }} successfully uploaded."
-      
